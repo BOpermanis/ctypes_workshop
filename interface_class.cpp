@@ -5,7 +5,6 @@
 #include <string.h>
 #include <cstring>
 
-// A simple class with a constuctor and some methods...
 using namespace std;
 
 class Interface
@@ -22,34 +21,21 @@ class Interface
             return j;
         }
 
-        const char*  returning_string_as_pointer(char* sptr, int n){
+        int* simple_arrays(int* arr){
+            for(int i=0; i < 10; i++)
+                cout << "array element " << arr[i] << endl;
+
+            int arr_out[3] = {2, 4, 3};
+            return arr_out;
+        }
+
+        const char* returning_string_as_pointer(char* sptr, int n){
             static char s[15] = "The input was ";
             strcat(s, sptr);
 //            string str(s);
             return s;
         }
-
-//        int foobar(int);
-//    private:
-//        int val;
 };
-
-//const char* Interface::bar()
-//{
-//    std::string s;
-//    std::string msg;
-//
-//    s = std::to_string(val);
-//    msg = "The value is " + s;
-//    const char* rv = msg.c_str();
-//    return rv;
-//}
-//
-//int Interface::foobar(int n)
-//{
-//    return val + n;
-//}
-
 // Define C functions for the C++ class - as ctypes can only talk to C...
 
 extern "C"
@@ -63,8 +49,10 @@ extern "C"
     const char* Interface_returning_string_as_pointer(Interface* face, char* sptr, int n) {
     return face->returning_string_as_pointer(sptr, n);}
 
-//    const char* Interface_bar(Interface* face) {return face->bar();}
-//    int Interface_foobar(Interface* face, int n) {return face->foobar(n);}
+    int* Interface_simple_arrays(Interface* face, int* arr) {
+    return face->simple_arrays(arr);}
+
+
     void Interface_delete(Interface* face)
     {
         if (face)
