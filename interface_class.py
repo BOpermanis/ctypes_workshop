@@ -1,11 +1,19 @@
-"""foo.py - a simple demo of importing a calss from C++"""
 from ctypes import *
 
 lib = cdll.LoadLibrary('./libinterface_class.so')
 
 
+class Box(Structure):
+    _fields_ = [
+        ("xmin", c_int),
+        ("ymin", c_int),
+        ("xmax", c_int),
+        ("ymax", c_int)
+    ]
+
+
 class Interface:
-    """The Foo class supports two methods, bar, and foobar..."""
+
     def __init__(self, name):
         lib.Interface_new.argtypes = [c_char_p]
         lib.Interface_new.restype = c_void_p
@@ -18,6 +26,9 @@ class Interface:
 
         lib.Interface_simple_arrays.argtypes = [c_void_p, c_int * 10]
         lib.Interface_simple_arrays.restype = c_int * 3
+
+        lib.Interface_intersect_bboxes.argtypes = [c_void_p, Box, Box]
+        lib.Interface_intersect_bboxes.restype = Box
 
         name = c_char_p(name.encode('utf-8'))
         self.obj = lib.Interface_new(name)
@@ -37,7 +48,10 @@ class Interface:
         - returning the result"""
         s = c_char_p(s.encode('utf-8'))
         return (lib.Interface_returning_string_as_pointer(self.obj, s)).decode()
-        
+
+    def intersect_bboxes(self, bbox1, bbox2):
+        return lib.Interface_intersect_bboxes(self.obj, Box(*bbox1), Box(*bbox2))
+
     def __del__(self):
         """destruct unmanaged object"""
         return lib.Interface_delete(self.obj)
@@ -52,4 +66,7 @@ if __name__ == "__main__":
     print(len(a))
 
     print(cl.simple_arrays(list(range(10))))
+    b3 = cl.intersect_bboxes((0, 0, 2, 2), (1, 1, 3, 3))
+    print(b3.xmin, b3.ymin, b3.xmax, b3.ymax)
+
 
