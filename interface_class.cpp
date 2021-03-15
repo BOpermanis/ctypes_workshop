@@ -7,21 +7,8 @@
 
 using namespace std;
 
-struct bbox {
-    int xmin;
-    int ymin;
-    int xmax;
-    int ymax;
-//    int area()
-//        return (xmax - xmin) * (ymax - ymin);
-//
-//    bbox intersect(bbox other)
-//        return bbox(
-//            max(xmin, other.xmin),
-//            max(ymin, other.ymin),
-//            min(xmax, other.xmax),
-//            min(xmax, other.xmax)
-//        );
+struct Box {
+    int xmin, ymin, xmax, ymax;
 };
 
 class Interface
@@ -49,29 +36,11 @@ class Interface
         const char* returning_string_as_pointer(char* sptr, int n){
             static char s[15] = "The input was ";
             strcat(s, sptr);
-//            string str(s);
             return s;
         }
 
-        float iou(bbox b1, bbox b2){
-
-            int xmin = max(b1.xmin, b2.xmin);
-            int ymin = max(b1.ymin, b2.ymin);
-            int xmax = min(b1.xmax, b2.xmax);
-            int ymax = min(b1.xmax, b2.xmax);
-
-            float intersection = (xmax - xmin) * (ymax - ymin);
-            float area1 = (b1.xmax - b1.xmin) * (b1.ymax - b1.ymin);
-            float area2 = (b2.xmax - b2.xmin) * (b2.ymax - b2.ymin);
-
-            if (area1 + area2 - intersection > 0.0)
-                return intersection / (area1 + area2 - intersection);
-
-            return 0.0;
-        }
-
-        bbox intersect_bboxes(bbox b1, bbox b2){
-            bbox intersection;
+        Box intersect_bboxes(Box b1, Box b2){
+            Box intersection;
             intersection.xmin = max(b1.xmin, b2.xmin);
             intersection.ymin = max(b1.ymin, b2.ymin);
             intersection.xmax = min(b1.xmax, b2.xmax);
@@ -97,7 +66,7 @@ extern "C"
     int* Interface_simple_arrays(Interface* face, int* arr) {
     return face->simple_arrays(arr);}
 
-    bbox Interface_intersect_bboxes(Interface* face, bbox b1, bbox b2) {
+    Box Interface_intersect_bboxes(Interface* face, Box b1, Box b2) {
     return face->intersect_bboxes(b1, b2);}
 
     void Interface_delete(Interface* face)
