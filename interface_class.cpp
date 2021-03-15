@@ -2,48 +2,68 @@
 #include <cstring>
 #include <cstdlib>
 #include <string>
+#include <string.h>
+#include <cstring>
 
 // A simple class with a constuctor and some methods...
+using namespace std;
 
 class Interface
 {
+    string myname;
     public:
-        Interface(int);
-        const char* bar();
-        int foobar(int);
-    private:
-        int val;
+        Interface(){
+            myname = 'wadup';
+        };
+
+        int simple_arguments(int i, float f){
+            int j = i + (int) f;
+            return j;
+        }
+
+        const char*  returning_string_as_pointer(char* sptr, int n){
+            static char s[15] = "The input was ";
+            strcat(s, sptr);
+//            string str(s);
+            return s;
+        }
+
+//        int foobar(int);
+//    private:
+//        int val;
 };
 
-Interface::Interface(int n)
-{
-    val = n;
-}
-
-const char* Interface::bar()
-{
-    std::string s;
-    std::string msg;
-    
-    s = std::to_string(val);
-    msg = "The value is " + s;
-    const char* rv = msg.c_str();
-    return rv;
-}
-
-int Interface::foobar(int n)
-{
-    return val + n;
-}
+//const char* Interface::bar()
+//{
+//    std::string s;
+//    std::string msg;
+//
+//    s = std::to_string(val);
+//    msg = "The value is " + s;
+//    const char* rv = msg.c_str();
+//    return rv;
+//}
+//
+//int Interface::foobar(int n)
+//{
+//    return val + n;
+//}
 
 // Define C functions for the C++ class - as ctypes can only talk to C...
 
 extern "C"
 {
 #ifdef __linux__
-    Interface* Interface_new(int n) {return new Interface(n);}
-    const char* Interface_bar(Interface* face) {return face->bar();}
-    int Interface_foobar(Interface* face, int n) {return face->foobar(n);}
+    Interface* Interface_new() {return new Interface();}
+
+    int Interface_simple_arguments(Interface* face, int i, float f) {
+    return face->simple_arguments(i, f);}
+
+    const char* Interface_returning_string_as_pointer(Interface* face, char* sptr, int n) {
+    return face->returning_string_as_pointer(sptr, n);}
+
+//    const char* Interface_bar(Interface* face) {return face->bar();}
+//    int Interface_foobar(Interface* face, int n) {return face->foobar(n);}
     void Interface_delete(Interface* face)
     {
         if (face)
