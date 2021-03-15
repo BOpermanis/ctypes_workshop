@@ -12,8 +12,9 @@ class Interface
 {
     string myname;
     public:
-        Interface(){
-            myname = 'wadup';
+        Interface(char* name){
+            myname = string(name);
+            cout << "Hi, my name is " << name << endl;
         };
 
         int simple_arguments(int i, float f){
@@ -54,7 +55,7 @@ class Interface
 extern "C"
 {
 #ifdef __linux__
-    Interface* Interface_new() {return new Interface();}
+    Interface* Interface_new(char* name) {return new Interface(name);}
 
     int Interface_simple_arguments(Interface* face, int i, float f) {
     return face->simple_arguments(i, f);}
