@@ -82,7 +82,9 @@ class Interface:
         shape = np.array(gridmap.shape, dtype=np.int32)
         start = np.array(start, dtype=np.int32)
         finish = np.array(finish, dtype=np.int32)
-
+        gridmap = gridmap.astype(np.int32)
+        gridmap[gridmap == 0] = 1
+        gridmap[gridmap == 255] = 9
         path = lib.Interface_run_astar(
             self.obj,
             gridmap.ctypes.data_as(c_intp),  # Cast numpy array to ctypes integer pointer
