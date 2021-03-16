@@ -11,3 +11,7 @@ To build use:
 
 To run the demo run: `python main.py`
 
+## Recources
+
+* [Auctoris](https://github.com/Auctoris/ctypes_demo)
+* [justinhj](https://github.com/justinhj/astar-algorithm-cpp)

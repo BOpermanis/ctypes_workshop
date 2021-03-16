@@ -2,8 +2,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <string>
-#include <string.h>
 #include <cstring>
+//#include "astar/AStar.hpp"
 
 using namespace std;
 
@@ -48,6 +48,18 @@ class Interface
             return intersection;
         }
 
+        int multiply_by_3(int *arr_in, int *arr_out, int* shape) {
+            int row, col, num_rows, num_cols;
+            num_rows = shape[0];
+            num_cols = shape[1];
+            for (row=0; row<num_rows; row++) {
+                for (col=0; col<num_cols; col++) {
+                    //cout << arr_in[row*num_cols + col] << endl;
+                    arr_out[row*num_cols + col] = 3*arr_in[row*num_cols + col];
+                }
+            }
+            return 0;
+        }
 
 };
 // Define C functions for the C++ class - as ctypes can only talk to C...
@@ -68,6 +80,9 @@ extern "C"
 
     Box Interface_intersect_bboxes(Interface* face, Box b1, Box b2) {
     return face->intersect_bboxes(b1, b2);}
+
+    int Interface_multiply_by_3(Interface* face, int *arr_in, int *arr_out, int *shape) {
+    return face->multiply_by_3(arr_in, arr_out, shape);}
 
     void Interface_delete(Interface* face)
     {
