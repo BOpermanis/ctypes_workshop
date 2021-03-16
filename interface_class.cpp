@@ -115,15 +115,32 @@ extern "C"
         }
     }
 #elif _WIN32
-    __declspec(dllexport) Foo* Foo_new(int n) {return new Foo(n);}
-    __declspec(dllexport) const char* Foo_bar(Foo* foo) {return foo->bar();}
-    __declspec(dllexport) int Foo_foobar(Foo* foo, int n) {return foo->foobar(n);}
-    __declspec(dllexport) void Foo_delete(Foo* foo)
+    __declspec(dllexport) Interface* Interface_new(char* name) {return new Interface(name);}
+
+    __declspec(dllexport) int Interface_simple_arguments(Interface* face, int i, float f) {
+    return face->simple_arguments(i, f);}
+
+    __declspec(dllexport) const char* Interface_returning_string_as_pointer(Interface* face, char* sptr, int n) {
+    return face->returning_string_as_pointer(sptr, n);}
+
+    __declspec(dllexport) int* Interface_simple_arrays(Interface* face, int* arr) {
+    return face->simple_arrays(arr);}
+
+    __declspec(dllexport) Box Interface_intersect_bboxes(Interface* face, Box b1, Box b2) {
+    return face->intersect_bboxes(b1, b2);}
+
+    __declspec(dllexport) int Interface_multiply_by_3(Interface* face, int *arr_in, int *arr_out, int *shape) {
+    return face->multiply_by_3(arr_in, arr_out, shape);}
+
+    __declspec(dllexport) Path Interface_run_astar(Interface* face, int *gridmap, int* shape, int *start, int* finish) {
+    return face->run_astar(gridmap, shape, start, finish);}
+
+    __declspec(dllexport) void Interface_delete(Interface* face)
     {
-        if (foo)
+        if (face)
         {
-            delete foo;
-            foo = nullptr;
+            delete face;
+            face = nullptr;
         }
     }
 #else
