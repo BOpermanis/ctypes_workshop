@@ -1,15 +1,10 @@
 cmake_minimum_required(VERSION 2.8.9)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -std=c++0x -Wall")
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MACOSX_RPATH 1)
 
 project(interface_class)
 #set (SOURCE interface_class.cpp)
-set (SOURCE interface_class.cpp
-#astar/stlastar.h
-#astar/fsa.h
-)
-#add_subdirectory(astar)
+set (SOURCE interface_class.cpp)
 
 add_library(interface_class MODULE ${SOURCE})

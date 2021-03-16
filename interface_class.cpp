@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
-#include "astar/astar_image.cpp"
+//#include "astar/astar_image.cpp"
 
 using namespace std;
 
@@ -11,12 +11,10 @@ struct Box {
     int xmin, ymin, xmax, ymax;
 };
 
-#ifdef Path
 struct Path {
     int length;
     int* data;
 };
-#endif
 
 class Interface
 {
@@ -59,24 +57,16 @@ class Interface
             int row, col, num_rows, num_cols;
             num_rows = shape[0];
             num_cols = shape[1];
-            for (row=0; row<num_rows; row++) {
-                for (col=0; col<num_cols; col++) {
-                    //cout << arr_in[row*num_cols + col] << endl;
-                    arr_out[row*num_cols + col] = 3*arr_in[row*num_cols + col];
-                }
-            }
+            // TODO multiply arr_in with 3
             return 0;
         }
 
         Path run_astar(int *gridmap, int* shape, int *start, int* finish) {
-
-            int height, width;
-            height = shape[0];
-            width = shape[1];
-            auto path = apply2img(gridmap, width, height, start, finish);
-//            for (int i= 0; i <path.length * 2 ; i++){
-//                cout << path.data[i] << endl;
-//            }
+            // TODO run astar on input gridmap
+            Path path;
+            int arr[6] = {0, 0, 1, 1, 2, 2};
+            path.length = 3;
+            path.data = arr;
             return path;
         }
 

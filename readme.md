@@ -7,9 +7,9 @@ This is an example of building a (simple) C++ class and interfacing it to Python
 To build use:
 `cmake .` to build the `makefile`, and then build with make in the usual way...
 
-## Running
+## Workshop
 
-To run the demo run: `python main.py`
+Uncompleted code is in workshop branch
 
 ## Recources
 
