@@ -20,7 +20,6 @@ class Path(Structure):
         ('data', POINTER(c_int)),
     ]
 
-
 class Interface:
 
     def __init__(self, name):
@@ -102,6 +101,8 @@ class Interface:
 
 
 if __name__ == "__main__":
+    import cv2
+    from PIL import Image
     cl = Interface('Frodo')
     # print(cl.simple_arguments(2, 5.1))
     #
@@ -120,6 +121,20 @@ if __name__ == "__main__":
     from utils import load_and_prepare_map
 
     gray, img, start, finish = load_and_prepare_map("maps/maze.jpg")
-    print(cl.run_astar(gray, start, finish))
+    path = cl.run_astar(gray, start, finish)
+
+    for i in range(len(path)-1):
+        x, y = path[i]
+        x1, y1 = path[i + 1]
+        if 0 <= x <= img.shape[1] and 0 <= y <= img.shape[1]:
+            # x, x1 = np.clip((x, x1), 0, img.shape[1])
+            # y, y1 = np.clip((y, y1), 0, img.shape[0])
+            cv2.line(img, (x, y), (x1, y1), (0, 255, 0), 1)
+        else:
+            break
+
+    img = cv2.resize(img, (700, 700))
+    Image.fromarray(img).show()
+
 
 

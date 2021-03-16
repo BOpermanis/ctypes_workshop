@@ -1,5 +1,3 @@
-// A unit test suite
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -156,7 +154,6 @@ Path apply2img(int* gridmap, int width, int height, int* start, int* finish) {
                 arr[k] = ii;
                 k += 1;
             }
-
 //			cout << "Solution steps " << steps << endl;
 			path.length = steps;
 			path.data = arr;
@@ -168,21 +165,11 @@ Path apply2img(int* gridmap, int width, int height, int* start, int* finish) {
 		}
 
 		// Display the number of loops the search went through
-		cout << "SearchSteps : " << SearchSteps << "\n";
+//		cout << "SearchSteps : " << SearchSteps << "\n";
 		SearchCount ++;
 		astarsearch.EnsureMemoryFreed();
 	}
 
 	assert(true && "failed to be true");
-//    Path path;
-//    path.length = 3;
-//    int arr [] = {0, 1, 0, 2, 1, 2};
-//    path.data = arr;
     return path;
 }
-
-//g++ astar_image.cpp stlastar.h fsa.h
-//int main() {
-//    apply2img();
-//    return 0;
-//}
