@@ -11,6 +11,11 @@ struct Box {
     int xmin, ymin, xmax, ymax;
 };
 
+struct Path {
+    int length;
+    int* data;
+};
+
 class Interface
 {
     string myname;
@@ -61,6 +66,16 @@ class Interface
             return 0;
         }
 
+        Path run_astar(int *gridmap, int* shape, int *start, int* finish) {
+            cout << "runnig astar" << endl;
+            Path path;
+            path.length = 3;
+            int arr [] = {0, 1, 0, 2, 1, 2};
+
+            path.data = arr;
+            return path;
+        }
+
 };
 // Define C functions for the C++ class - as ctypes can only talk to C...
 
@@ -83,6 +98,9 @@ extern "C"
 
     int Interface_multiply_by_3(Interface* face, int *arr_in, int *arr_out, int *shape) {
     return face->multiply_by_3(arr_in, arr_out, shape);}
+
+    Path Interface_run_astar(Interface* face, int *gridmap, int* shape, int *start, int* finish) {
+    return face->run_astar(gridmap, shape, start, finish);}
 
     void Interface_delete(Interface* face)
     {

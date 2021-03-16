@@ -4,6 +4,7 @@ import numpy as np
 # lib = cdll.LoadLibrary('./libinterface_class.so')
 lib = npct.load_library('libinterface_class', '.')
 
+
 class Box(Structure):
     _fields_ = [
         ("xmin", c_int),
@@ -11,6 +12,14 @@ class Box(Structure):
         ("xmax", c_int),
         ("ymax", c_int)
     ]
+
+
+class Path(Structure):
+    _fields_ = [
+        ('length', c_int),
+        ('data', POINTER(c_int)),
+    ]
+
 
 class Interface:
 
@@ -33,6 +42,11 @@ class Interface:
         lib.Interface_multiply_by_3.argtypes = [c_void_p, POINTER(c_int),
             POINTER(c_int), POINTER(c_int)]
         lib.Interface_multiply_by_3.restype = c_int
+
+        lib.Interface_run_astar.argtypes = [c_void_p, POINTER(c_int),
+                                            POINTER(c_int),
+                                            POINTER(c_int), POINTER(c_int)]
+        lib.Interface_run_astar.restype = Path
 
         name = c_char_p(name.encode('utf-8'))
         self.obj = lib.Interface_new(name)
@@ -63,6 +77,23 @@ class Interface:
             shape.ctypes.data_as(c_intp))
         return arr_out
 
+    def run_astar(self, gridmap, start, finish):
+        c_intp = POINTER(c_int)  # ctypes integer pointer
+        shape = np.array(gridmap.shape, dtype=np.int32)
+        start = np.array(start, dtype=np.int32)
+        finish = np.array(finish, dtype=np.int32)
+
+        path = lib.Interface_run_astar(
+            self.obj,
+            gridmap.ctypes.data_as(c_intp),  # Cast numpy array to ctypes integer pointer
+            shape.ctypes.data_as(c_intp),
+            start.ctypes.data_as(c_intp),
+            finish.ctypes.data_as(c_intp)
+        )
+
+        path = [(path.data[i*2], path.data[i*2 + 1]) for i in range(path.length)]
+        return path
+
     def __del__(self):
         """destruct unmanaged object"""
         return lib.Interface_delete(self.obj)
@@ -80,8 +111,15 @@ if __name__ == "__main__":
     # b3 = cl.intersect_bboxes((0, 0, 2, 2), (1, 1, 3, 3))
     # print(b3.xmin, b3.ymin, b3.xmax, b3.ymax)
 
-    arr = np.random.randint(0, 5, (4, 3))
-    print(arr)
-    print(cl.multiply_by_3(arr))
+    # arr = np.random.randint(0, 5, (4, 3))
+    # print(arr)
+    # print(cl.multiply_by_3(arr))
+
+    from utils import load_and_prepare_map
+
+    gray, img = load_and_prepare_map("maps/maze.jpg")
+    start = (10, 10)
+    finish = (565, 630)
+    print(cl.run_astar(gray, start, finish))
 
 
