@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
-//#include "astar/AStar.hpp"
+#include "astar/astar_image.cpp"
 
 using namespace std;
 
@@ -11,10 +11,12 @@ struct Box {
     int xmin, ymin, xmax, ymax;
 };
 
+#ifdef Path
 struct Path {
     int length;
     int* data;
 };
+#endif
 
 class Interface
 {
@@ -67,11 +69,16 @@ class Interface
         }
 
         Path run_astar(int *gridmap, int* shape, int *start, int* finish) {
-            cout << "runnig astar" << endl;
+
+            int height, width;
+            height = shape[0];
+            width = shape[1];
+            cout << 111 << endl;
+            apply2img(gridmap, width, height);
+//            cout << "runnig astar" << endl;
             Path path;
             path.length = 3;
             int arr [] = {0, 1, 0, 2, 1, 2};
-
             path.data = arr;
             return path;
         }
