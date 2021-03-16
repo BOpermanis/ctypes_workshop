@@ -83,8 +83,8 @@ class Interface:
         start = np.array(start, dtype=np.int32)
         finish = np.array(finish, dtype=np.int32)
         gridmap = gridmap.astype(np.int32)
-        gridmap[gridmap == 0] = 1
-        gridmap[gridmap == 255] = 9
+        gridmap[gridmap == 0] = 9
+        gridmap[gridmap == 255] = 1
         path = lib.Interface_run_astar(
             self.obj,
             gridmap.ctypes.data_as(c_intp),  # Cast numpy array to ctypes integer pointer
@@ -119,9 +119,7 @@ if __name__ == "__main__":
 
     from utils import load_and_prepare_map
 
-    gray, img = load_and_prepare_map("maps/maze.jpg")
-    start = (10, 10)
-    finish = (565, 630)
+    gray, img, start, finish = load_and_prepare_map("maps/maze.jpg")
     print(cl.run_astar(gray, start, finish))
 
 

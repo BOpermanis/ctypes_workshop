@@ -7,8 +7,8 @@ set(CMAKE_MACOSX_RPATH 1)
 project(interface_class)
 #set (SOURCE interface_class.cpp)
 set (SOURCE interface_class.cpp
-astar/stlastar.h
-astar/fsa.h
+#astar/stlastar.h
+#astar/fsa.h
 )
 #add_subdirectory(astar)
 

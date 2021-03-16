@@ -73,14 +73,7 @@ class Interface
             int height, width;
             height = shape[0];
             width = shape[1];
-            cout << 111 << endl;
-            apply2img(gridmap, width, height);
-//            cout << "runnig astar" << endl;
-            Path path;
-            path.length = 3;
-            int arr [] = {0, 1, 0, 2, 1, 2};
-            path.data = arr;
-            return path;
+            return apply2img(gridmap, width, height, start, finish);;
         }
 
 };

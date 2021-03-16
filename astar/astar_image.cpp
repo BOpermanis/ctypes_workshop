@@ -3,7 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <list>
 #include "stlastar.h"
+
+int MAP_WIDTH;
+int MAP_HEIGHT;
+
+int* world_map;
 
 class ImageSearchNode
 {
@@ -11,47 +17,12 @@ public:
 	int x;	 // the (x,y) positions of the node
 	int y;
 
-//    static int MAP_WIDTH;
-//    static int MAP_HEIGHT;
-//	static int* world_map;
-
-	const static int MAP_WIDTH = 20;
-const static int MAP_HEIGHT = 20;
-//    int* world_map;
-int world_map[ MAP_WIDTH * MAP_HEIGHT ] =
-{
-
-// 0001020304050607080910111213141516171819
-	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,   // 00
-	1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,   // 01
-	1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,   // 02
-	1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,   // 03
-	1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1,   // 04
-	1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,   // 05
-	1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1,   // 06
-	1,9,9,9,9,9,9,9,9,1,1,1,9,9,9,9,9,9,9,1,   // 07
-	1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1,   // 08
-	1,9,1,9,9,9,9,9,9,9,1,1,9,9,9,9,9,9,9,1,   // 09
-	1,9,1,1,1,1,9,1,1,9,1,1,1,1,1,1,1,1,1,1,   // 10
-	1,9,9,9,9,9,1,9,1,9,1,9,9,9,9,9,1,1,1,1,   // 11
-	1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,   // 12
-	1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,   // 13
-	1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1,   // 14
-	1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,   // 15
-	1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1,   // 16
-	1,1,9,9,9,9,9,9,9,1,1,1,9,9,9,1,9,9,9,9,   // 17
-	1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1,   // 18
-	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,   // 19
-
-};
-
-
 	ImageSearchNode() { x = y = 0; }
 	ImageSearchNode( int px, int py ) { x=px; y=py; }
 
     int GetMap( int x, int y) {
 	    if( x < 0 || x >= MAP_WIDTH || y < 0 || y >= MAP_HEIGHT ) return 9;
-	    return world_map[(y*MAP_WIDTH)+x];
+	        return world_map[(y*MAP_WIDTH)+x];
     }
 
 	float GoalDistanceEstimate( ImageSearchNode &nodeGoal ){ return abs(x - nodeGoal.x) + abs(y - nodeGoal.y); }
@@ -110,16 +81,16 @@ struct Path {
     int* data;
 };
 
-Path apply2img(int* gridmap, int width, int height) {
+Path apply2img(int* gridmap, int width, int height, int* start, int* finish) {
+
+    world_map = gridmap;
+    MAP_WIDTH = width;
+    MAP_HEIGHT = height;
+
+    Path path;
+    path.length = 0;
 
 	AStarSearch<ImageSearchNode> astarsearch;
-
-//    ImageSearchNode::MAP_WIDTH = width;
-//    ImageSearchNode::MAP_HEIGHT = height;
-//    ImageSearchNode::world_map = gridmap;
-//        static int MAP_WIDTH;
-//    static int MAP_HEIGHT;
-//	static int* world_map;
 
 	unsigned int SearchCount = 0;
 
@@ -127,122 +98,91 @@ Path apply2img(int* gridmap, int width, int height) {
 
 	while(SearchCount < NumSearches)
 	{
-
 		// Create a start state
 		ImageSearchNode nodeStart;
-		nodeStart.x = 0;
-		nodeStart.y = 0;
+		nodeStart.x = start[0];
+		nodeStart.y = start[1];
 
 		// Define the goal state
 		ImageSearchNode nodeEnd;
-		nodeEnd.x = 3;
-		nodeEnd.y = 3;
-
+		nodeEnd.x = finish[0];
+		nodeEnd.y = finish[1];
 		// Set Start and goal states
 
 		astarsearch.SetStartAndGoalStates( nodeStart, nodeEnd );
 
 		unsigned int SearchState;
 		unsigned int SearchSteps = 0;
-
-		do
-		{
+		do {
 			SearchState = astarsearch.SearchStep();
-
 			SearchSteps++;
-
-	#if DEBUG_LISTS
-
-			cout << "Steps:" << SearchSteps << "\n";
-
 			int len = 0;
-
-			cout << "Open:\n";
 			ImageSearchNode *p = astarsearch.GetOpenListStart();
-			while( p )
-			{
+//			((ImageSearchNode *)p)->PrintNodeInfo();
+			while( p ) {
 				len++;
-	#if !DEBUG_LIST_LENGTHS_ONLY
-				((ImageSearchNode *)p)->PrintNodeInfo();
-	#endif
+//                ((ImageSearchNode *)p)->PrintNodeInfo();
 				p = astarsearch.GetOpenListNext();
-
 			}
-
-			cout << "Open list has " << len << " nodes\n";
-
 			len = 0;
-
-			cout << "Closed:\n";
 			p = astarsearch.GetClosedListStart();
 			while( p )
 			{
 				len++;
-	#if !DEBUG_LIST_LENGTHS_ONLY
-				p->PrintNodeInfo();
-	#endif
+//				p->PrintNodeInfo();
 				p = astarsearch.GetClosedListNext();
 			}
-
-			cout << "Closed list has " << len << " nodes\n";
-	#endif
-
 		}
 		while( SearchState == AStarSearch<ImageSearchNode>::SEARCH_STATE_SEARCHING );
 
-		if( SearchState == AStarSearch<ImageSearchNode>::SEARCH_STATE_SUCCEEDED )
-		{
-			cout << "Search found goal state\n";
+		if( SearchState == AStarSearch<ImageSearchNode>::SEARCH_STATE_SUCCEEDED ) {
+		    ImageSearchNode *node = astarsearch.GetSolutionStart();
+			int steps = 0;
+//            node->PrintNodeInfo();
+			list<int> output;
+			for( ;; ) {
+				node = astarsearch.GetSolutionNext();
+				if( !node ) break;
+//				node->PrintNodeInfo();
+				output.push_back(node->x);
+				output.push_back(node->y);
+				steps ++;
+			};
 
-				ImageSearchNode *node = astarsearch.GetSolutionStart();
+			int arr[output.size()];
+            int k = 0;
 
-	#if DISPLAY_SOLUTION
-				cout << "Displaying solution\n";
-	#endif
-				int steps = 0;
+            for (auto ii: output){
+                arr[k] = ii;
+                k += 1;
+            }
 
-				node->PrintNodeInfo();
-				for( ;; )
-				{
-					node = astarsearch.GetSolutionNext();
-
-					if( !node )
-					{
-						break;
-					}
-
-					node->PrintNodeInfo();
-					steps ++;
-
-				};
-
-				cout << "Solution steps " << steps << endl;
-
-				// Once you're done with the solution you can free the nodes up
-				astarsearch.FreeSolutionNodes();
-
-
+//			cout << "Solution steps " << steps << endl;
+			path.length = steps;
+			path.data = arr;
+			astarsearch.FreeSolutionNodes();
 		}
 		else if( SearchState == AStarSearch<ImageSearchNode>::SEARCH_STATE_FAILED )
 		{
 			cout << "Search terminated. Did not find goal state\n";
-
 		}
 
 		// Display the number of loops the search went through
 		cout << "SearchSteps : " << SearchSteps << "\n";
-
 		SearchCount ++;
-
 		astarsearch.EnsureMemoryFreed();
 	}
 
 	assert(true && "failed to be true");
-
-	printf("Tests succeeded\n");
-                Path path;
-            path.length = 3;
-            int arr [] = {0, 1, 0, 2, 1, 2};
-            path.data = arr;
+//    Path path;
+//    path.length = 3;
+//    int arr [] = {0, 1, 0, 2, 1, 2};
+//    path.data = arr;
     return path;
 }
+
+//g++ astar_image.cpp stlastar.h fsa.h
+//int main() {
+//    apply2img();
+//    return 0;
+//}
