@@ -5,7 +5,7 @@ This is an example of building a (simple) C++ class and interfacing it to Python
 ## Building
 
 To build use:
-`cmake .` to build the `makefile`, and then build with make in the usual way...
+`cmake .` (or `cmake.exe .\CMakeLists.txt ` on windows) to build the `makefile`, and then build with `make` (or `make.exe ` on windows).
 
 ## Workshop
 
