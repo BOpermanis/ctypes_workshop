@@ -47,6 +47,8 @@ class Interface:
                                             POINTER(c_int), POINTER(c_int)]
         lib.Interface_run_astar.restype = Path
 
+        lib.Interface_delete.argtypes = [c_void_p]
+
         name = c_char_p(name.encode('utf-8'))
         self.obj = lib.Interface_new(name)
 
