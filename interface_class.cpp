@@ -11,12 +11,11 @@ struct Box {
     int xmin, ymin, xmax, ymax;
 };
 
-//#ifdef Path
+
 //struct Path {
 //    int length;
 //    int* data;
 //};
-//#endif
 
 class Interface
 {

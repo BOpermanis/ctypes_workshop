@@ -82,7 +82,7 @@ class Interface:
         start = np.array(start, dtype=np.int32)
         finish = np.array(finish, dtype=np.int32)
         gridmap = gridmap.astype(np.int32)
-        gridmap[gridmap == 0] = 1000000
+        gridmap[gridmap == 0] = 9
         gridmap[gridmap == 255] = 1
         path = lib.Interface_run_astar(
             self.obj,
