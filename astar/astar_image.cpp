@@ -153,7 +153,7 @@ Path apply2img(int* gridmap, int width, int height, int* start, int* finish) {
             for (auto ii: output){
                 arr[k] = ii;
                 k += 1;
-            }
+            };
 //			cout << "Solution steps " << steps << endl;
 			path.length = steps;
 			path.data = arr;
