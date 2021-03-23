@@ -8,15 +8,13 @@ def load_and_prepare_map(path):
 
     img = cv2.imread(path)
 
-    r = 5
+    r = 3
     h, w = map(lambda x: int(x / r), (img.shape[:2]))
 
     start = (10, 10)
-    finish = (565, 630)
+    finish = (575, 630)
     start = tuple(map(lambda x: int(x / r), start))
     finish = tuple(map(lambda x: int(x / r), finish))
-
-    img = cv2.resize(img, (w, h))
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
@@ -29,6 +27,15 @@ def load_and_prepare_map(path):
     gray = gray[ymin:ymax, xmin:xmax]
     img = img[ymin:ymax, xmin:xmax]
 
+    ker = np.ones((2, 2)) / 4
+    gray = cv2.erode(gray, ker, iterations=2)
+    # gray = cv2.erode(gray, ker)
+
+    # Image.fromarray(gray).show()
+    # exit()
+    # img = cv2.resize(img, (w, h))
+    gray = cv2.resize(gray, (w, h), cv2.INTER_LINEAR)
+    img = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
     return gray, img, start, finish
 
 
@@ -42,11 +49,9 @@ if __name__ == "__main__":
     # Image.fromarray((gridmap * 20).astype(np.uint8)).show()
     # exit()
 
-
-
     cv2.circle(img, start, 3, (0, 255, 0), 3)
     cv2.circle(img, finish, 3, (0, 255, 0), 3)
     print(gray[10, 10])
-    Image.fromarray(img).show()
-
+    Image.fromarray(img).resize((1000, 1000)).show()
+    # Image.fromarray(img).show()
 
